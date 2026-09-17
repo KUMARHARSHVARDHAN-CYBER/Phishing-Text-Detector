@@ -1,9 +1,7 @@
 # AI/ML Phishing Detection and Data Preprocessing
 
-End-to-end Machine Learning and Natural Language Processing (NLP) system for detection of phishing attacks, spam and malicious messages. This repository also contains a comprehensive data preprocessing suite compatible with tabular and text datasets using Scikit-Learn pipeline.
----
 
----
+
 
 ## 📖 Overview of Project
 
@@ -15,7 +13,7 @@ Extracts statistical features using Term Frequency-Inverse Document Frequency (T
 Classifies malicious intent with the help of a Multinomial Naive Bayes `MultinomialNB` probabilistic classifier with confidence scores
 Preprocesses tabular data, including filling of missing values, categorical label encoding with unseen category protection and standard/min-max scaling
 Evaluates the performance of a machine learning model using Accuracy, Precision, Recall, F1-Score, and Confusion Matrix
----
+
 
 ## 🚀 Features
 
