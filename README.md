@@ -8,11 +8,16 @@
 Phishing attacks and fraudulent spam messages pose a great threat to users over different communication channels. Attackers often use deceptive links, social engineering, and identity theft to target vulnerable accounts and extract sensitive information.
 
 This project provides a scalable and modular AI/ML pipeline that:
-Sanitizes and normalizes text and removes links, HTML tags, special symbols, stopwords and stems using linguistic analysis
-Extracts statistical features using Term Frequency-Inverse Document Frequency (TF-IDF)
-Classifies malicious intent with the help of a Multinomial Naive Bayes `MultinomialNB` probabilistic classifier with confidence scores
-Preprocesses tabular data, including filling of missing values, categorical label encoding with unseen category protection and standard/min-max scaling
-Evaluates the performance of a machine learning model using Accuracy, Precision, Recall, F1-Score, and Confusion Matrix
+
+1.Sanitizes and normalizes text and removes links, HTML tags, special symbols, stopwords and stems using linguistic analysis
+
+2.Extracts statistical features using Term Frequency-Inverse Document Frequency (TF-IDF)
+
+3.Classifies malicious intent with the help of a Multinomial Naive Bayes `MultinomialNB` probabilistic classifier with confidence scores
+
+4.Preprocesses tabular data, including filling of missing values, categorical label encoding with unseen category protection and standard/min-max scaling
+
+5.Evaluates the performance of a machine learning model using Accuracy, Precision, Recall, F1-Score, and Confusion Matrix
 
 
 ## 🚀 Features
