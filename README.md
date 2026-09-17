@@ -1,15 +1,9 @@
-# AI/ML Phishing Detection & Data Preprocessing Pipeline
+# AI/ML Phishing Detection and Data Preprocessing
 
-[![Python Version](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Framework](https://img.shields.io/badge/Machine%20Learning-Scikit--Learn-orange.svg)](https://scikit-learn.org/)
-[![NLP](https://img.shields.io/badge/NLP-NLTK%20%7C%20TF--IDF-purple.svg)](https://www.nltk.org/)
-
-An end-to-end Machine Learning and Natural Language Processing (NLP) system designed to detect phishing attacks, malicious communications, and spam messages. This repository also features a robust data preprocessing suite for both textual and tabular datasets with Scikit-Learn pipeline compatibility.
-
+A comprehensive AI/ML project implementing Text Classification and Data Preprocessing tasks, focusing on spam detection and phishing recognition use cases. This repository also contains a set of tools for data preprocessing of text and other data types with scikit-learn pipeline support.
 ---
 
-## 📌 Table of Contents
+📌 Table of Contents
 1. [Project Overview](#-project-overview)
 2. [Key Features](#-key-features)
 3. [System Architecture](#-system-architecture)
@@ -19,260 +13,210 @@ An end-to-end Machine Learning and Natural Language Processing (NLP) system desi
 7. [Instructions for Testing](#-instructions-for-testing)
 8. [Module-by-Module Breakdown](#-module-by-module-breakdown)
 9. [Evaluation Metrics & Performance](#-evaluation-metrics--performance)
-10. [License](#-license)
-
 ---
 
 ## 📖 Project Overview
+Phishing spam emails and SMS messages constitute one of the most widespread and dangerous forms of communication these days. Cyber attackers use various URLs, social engineering, and spoofing techniques to entice users toward disclosure of personal information, banking details, and other sensitive data. The current project is an implementation of an AI/ML solution, which can identify spam and phishing messages, as well as provide an assessment of how likely it is that a given message is classified as spam or phishing.
+The developed solution provides essential functionalities, namely:
 
-Phishing attacks and fraudulent spam messages present a significant security vulnerability across communication channels. Attackers exploit deceptive URLs, social engineering tactics, and forged identities to compromise accounts and steal sensitive data.
+- Text Cleaning / Preprocessing: Removal of URLs, HTML special characters, and other unwanted symbols, stemming, and lemmatization
 
-This project delivers a **modular, scalable AI/ML pipeline** that:
-- **Sanitizes and Normalizes Text**: Eliminates URLs, HTML tags, special symbols, stopwords, and inflected forms using linguistic stemming and lemmatization.
-- **Extracts Statistical Features**: Computes **Term Frequency-Inverse Document Frequency (TF-IDF)** representations of input text.
-- **Classifies Malicious Intent**: Employs a **Multinomial Naive Bayes (`MultinomialNB`)** probabilistic classifier with real-time confidence scores.
-- **Preprocesses Tabular Data**: Automatically handles missing values (mean/median/mode), applies categorical label encoding with unseen class protection, and executes feature scaling (Standard / Min-Max).
-- **Evaluates Model Performance**: Computes Accuracy, Precision, Recall, F1-Score, and Confusion Matrix across binary and multiclass configurations.
+- Feature Extraction: TF-IDF transformation for text
+- Implementation of ML Classification Model: `MultinomialNB` probabilistic classifier
 
+- Data Preprocessing: Missing data imputation, categorical data encoding, and feature scaling
+
+- Evaluation: Computation of classification performance measures, such as Accuracy, Precision, Recall, F1-score, and Confusion Matrix
 ---
-
 ## 🚀 Features
+### 1. Text Preprocessing Tool
+The `TextPreprocessor` class offers a battery of different preprocessing techniques, including:
+- Lowercasing
+- Removing URLs (`http/https/www`)
+- Removing HTML special characters (`"`, `
+`, `<`, etc.)
+- Removing punctuation
+- Stemming and Lemmatization
+The class provides an additional safety feature, which allows for using the module without external NLTK data. In such cases, the TextPreprocessor will utilize built-in dictionaries and regular expressions to perform several operations, which would otherwise require external resources.
+The TextPreprocessor is engineered with the Scikit-Learn framework in mind, as it implements `BaseEstimator` and `TransformerMixin` classes.
+### 2. Tabular Data Preprocessor
+The `TabularPreprocessor` class is used to extract numerical and categorical data from the dataset in order to perform several key operations, including:
+- Missing data imputation (mean, median, mode, or a constant for numerical data; `most_frequent` or `Missing` category for categorical data)
+- Categorical data encoding (Label Encoding with handling of unknown categories)
+- Feature scaling (StandardScaler, MinMaxScaler)
+### 3. Text Classification Model
+The `PhishingClassifier` class wraps around `sklearn.naive_bayes.MultinomialNB` estimator and provides an out-of-the-box solution for classification tasks, such as spam detection or phishing recognition. It also has the following utilities:
+- Implementation of `predict` and `predict_proba` methods
+- Saving and loading classification models (`save_model`, `load_model`)
+The PhishingClassifier is also compatible with the Scikit-Learn framework.
 
-### 1. NLP Text Preprocessing Engine (`TextPreprocessor`)
-- **Cleaning Filters**: Lowercasing, URL removal (`http/https/www`), HTML tag stripping, punctuation filtering, and whitespace normalization.
-- **Linguistic Processing**: Stopword elimination, Porter Stemming, and WordNet Lemmatization.
-- **Resilient Fallback**: Operates fully offline even when external NLTK corpora are unavailable by utilizing embedded dictionaries and regex fallback mechanisms.
-- **Pipeline Compatible**: Inherits from Scikit-Learn's `BaseEstimator` and `TransformerMixin` for drop-in usage within `sklearn.pipeline.Pipeline`.
-
-### 2. Tabular Data Preprocessor (`TabularPreprocessor`)
-- **Automated Column Detection**: Detects numerical and categorical feature sets dynamically.
-- **Missing Value Imputation**: Configurable imputation strategies (`median`, `mean`, or custom constants for numbers; `most_frequent` / `Missing` for categories).
-- **Categorical Encoding**: Label encoding with graceful handling of unseen categories in test or inference sets.
-- **Feature Scaling**: Supports `StandardScaler` (Z-score normalization) and `MinMaxScaler` (0 to 1 normalization).
-
-### 3. Phishing & Spam Classifier (`PhishingClassifier`)
-- **Multinomial Naive Bayes Algorithm**: Optimized for sparse, high-dimensional TF-IDF vectors.
-- **Confidence Scoring**: Computes posterior class probabilities via `predict_proba`.
-- **Model Persistence**: Complete serialization support (`save_model` and `load_model`) using `joblib`.
-
-### 4. Evaluation Suite (`ModelEvaluator`)
-- **Comprehensive Metrics**: Accuracy, Precision, Recall, F1-Score (binary & weighted multi-class), and Confusion Matrix.
-- **Multi-Type Label Support**: Supports string labels (`'ham'`, `'spam'`, `'phishing'`) and numeric labels (`0`, `1`).
-- **Pretty Print Diagnostics**: Clean terminal summaries for quick inspection and reporting.
-
-### 5. Automated Dataset Loader & Fallback (`app.py`)
-- Automatically reads external datasets such as `sms_spam.csv`.
-- Includes a built-in synthetic benchmark dataset to run and verify functionality immediately without external file requirements.
-
+### 4. Metrics Evaluation Tool
+The `ModelEvaluator` class provides a set of classification performance evaluation metrics, including Accuracy, Precision, Recall, F1-score, and Confusion Matrix. It offers a variety of functions for analyzing the performance of a classification model.
+The metrics functionality is organized in such a way that it can accept both string labels (`'ham'`, `'spam'`, `'phishing'`) and numerical labels (`0`, `1`).
+### 5. Dataset Loader and Fall-back Mechanism
+The application provides a fall-back mechanism, which ensures that irrespective of whether the required external dataset is present or not, the user will be able to use an alternative dataset for model training and testing. The fallback dataset is a part of the application and does not require any external files to be downloaded and used.
+The app.py script is also capable of reading external datasets (e.g., `sms_spam.csv`) and utilizing them for model training and testing.
 ---
-
 ## 🏗 System Architecture
-
 ```mermaid
 flowchart TD
-    A[Raw Input: Text / SMS / Email] --> B[TextPreprocessor]
-    B -->|Cleaned Text| C[TF-IDF Vectorizer]
-    C -->|Feature Matrix| D[PhishingClassifier - MultinomialNB]
-    D --> E[Class Prediction: HAM or SPAM]
-    D --> F[Confidence Probability Score]
-    
-    G[Dataset / CSV] --> H[Train/Test Split]
-    H -->|Train Set| B
-    H -->|Test Set| I[ModelEvaluator]
-    E --> I
-    I --> J[Metrics: Accuracy, Precision, Recall, F1, Confusion Matrix]
+A[Raw Input: Text / SMS / Email] --> B[TextPreprocessor]
+B -->|Cleaned Text| C[TF-IDF Vectorizer]
+C -->|Feature Matrix| D[PhishingClassifier - MultinomialNB]
+D --> E[Class Prediction: HAM or SPAM]
+D --> F[Confidence Probability Score]
+G[Dataset / CSV] --> H[Train/Test Split]
+H -->|Train Set| B
+H -->|Test Set| I[ModelEvaluator]
+E --> I
+
+I --> J[Metrics: Accuracy, Precision, Recall, F1, Confusion Matrix]
 ```
-
 ---
-
 ## 🛠 Technologies & Tools Used
-
 | Category | Technology / Library | Purpose |
 | :--- | :--- | :--- |
-| **Language** | **Python 3.9+ / 3.10+** | Core programming language |
-| **Machine Learning** | **Scikit-Learn (`sklearn`)** | Naive Bayes model, TF-IDF vectorization, feature scalers, evaluation metrics |
-| **NLP** | **NLTK (Natural Language Toolkit)** | Tokenization, stopwords, PorterStemmer, WordNetLemmatizer |
-| **Data Processing** | **Pandas** | DataFrame manipulation, dataset ingestion, tabular cleaning |
-| **Numerical Computing** | **NumPy** | Array transformations and matrix operations |
-| **Model Serialization**| **Joblib** | Storing and loading trained ML models |
-| **Text Processing** | **Regex (`re`) & `string`** | Pattern matching, URL removal, and string sanitization |
-
+| Language | Python 3.9+ / 3.10+ | Core programming language |
+| Machine Learning | Scikit-Learn (`sklearn`) | ML Model, TF-IDF, Feature Scaling, Metrics Evaluation |
+| NLP | NLTK (Natural Language Toolkit) | Text Preprocessing Tasks |
+| Data Processing | Pandas | DataFrame Creation and Manipulation |
+| Numerical Computing | NumPy | Array Manipulations |
+| Model Serialization| Joblib | Save and Load ML Models |
+| Text Processing | Regex (`re`) & `string` | String Operations and URL Extraction |
 ---
-
 ## 📁 Repository Structure
-
 ```text
 AIML-VITYARTHI PROJECT/
 │
-├── data_preprocessing.py   # Text & Tabular preprocessing pipeline classes
-├── model_training.py       # PhishingClassifier training, inference, and serialization
-├── evaluate.py             # ModelEvaluator metric computation and reporting
-├── app.py                  # End-to-end driver: dataset load, train, test, and live inference
-├── requirements.txt        # Project dependencies and library versions
-├── pyrightconfig.json      # Python type checking configuration
-└── README.md               # Project documentation and usage guide
+├── data_preprocessing.py  # Text & Tabular preprocessing pipeline classes
+├── model_training.py    # PhishingClassifier training, inference, and serialization
+├── evaluate.py       # ModelEvaluator metric computation and reporting
+├── app.py         # End-to-end driver: dataset load, train, test, and live inference
+├── requirements.txt    # Project dependencies and library versions
+├── pyrightconfig.json   # Python type checking configuration
+└── README.md        # Project documentation and usage guide
 ```
-
 ---
-
 ## ⚙️ Steps to Install & Run
-
 ### 1. Prerequisites
-Ensure you have **Python 3.9** or higher installed on your system. Verify with:
+Make sure you have the latest version of Python 3.9 or later installed on your computer. To confirm that the system has Python installed, execute the following command in your terminal:
 ```bash
 python --version
 ```
-
 ### 2. Clone / Open the Project Directory
-Navigate to the project root directory:
+Go to the location on your computer where you would like to store the project:
 ```bash
 cd "AIML-VITYARTHI PROJECT"
 ```
-
 ### 3. Create and Activate a Virtual Environment
-It is recommended to use an isolated Python virtual environment:
-
-- **Windows (PowerShell):**
-  ```powershell
-  python -m venv .venv
-  .venv\Scripts\Activate.ps1
-  ```
-
-- **Windows (Command Prompt):**
-  ```cmd
-  python -m venv .venv
-  .venv\Scripts\activate.bat
-  ```
-
-- **macOS / Linux:**
-  ```bash
-  python3 -m venv .venv
-  source .venv/bin/activate
-  ```
-
+It is recommended that you create and activate a virtual environment:
+- Windows (PowerShell)
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+- Windows (Command Prompt)
+```cmd
+python -m venv .venv
+.venv\Scripts\activate.bat
+```
+- macOS / Linux
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 ### 4. Install Dependencies
-Install all required libraries using `requirements.txt`:
+Install all the requirements by running the following command:
 ```bash
 pip install -r requirements.txt
 ```
-
-*(Optional)* Download NLTK data if online:
+(Optional) If the system is connected to the internet, it will be possible to download the NLTK data by executing the following command:
 ```bash
 python -c "import nltk; nltk.download('stopwords'); nltk.download('punkt'); nltk.download('wordnet')"
 ```
-> **Note:** Even without downloading NLTK datasets, the preprocessor includes an offline fallback dictionary and tokenizer regex that will execute without errors.
-
+However, if the system is not connected to the internet, it will still be possible to utilize the `TextPreprocessor` class because it has a built-in fall-back option, which makes use of a few dictionaries and regular expressions to simulate some of the basic NLTK operations.
 ### 5. Run the Main Application
-Execute the full end-to-end machine learning pipeline:
+To execute the main application, run the following command:
 ```bash
 python app.py
 ```
-
 ---
-
 ## 🧪 Instructions for Testing
-
-You can test individual modules or run the complete integration pipeline using the commands below:
-
-### Test 1: Data Preprocessing Unit Test
-Validates text cleaning (URL removal, punctuation, stemming) and tabular dataset imputation, categorical encoding, and feature scaling:
+To test the application, the user may run test cases, provided by the following scripts:
+### Test 1: Data Preprocessing Script
+This script tests that the data preprocessing pipeline works correctly. It runs the TabularPreprocessor, TextPreprocessor, and displays the resulting tokens:
 ```bash
 python data_preprocessing.py
 ```
-**Expected Output:** Displays preprocessed tokens and the transformed DataFrame with scaled numerical columns.
-
+Expected Output:
+It will show some of the resulting tokens after the preprocessor pipeline has been applied. In addition, the script will display the resulting dataframe, which has undergone several transformations (e.g., missing data imputation, feature scaling).
 ---
-
-### Test 2: Model Training & Inference Test
-Tests the `PhishingClassifier` on sample training and testing sequences:
+### Test 2: Model Training Script
+This script trains the model and tests it on some example data:
 ```bash
 python model_training.py
 ```
-**Expected Output:** Outputs training progress, predicted classifications (`PHISHING` vs `LEGITIMATE`), probability scores, accuracy, and F1-score.
-
+Expected Output:
+It will print out the training progress, model predictions, confidence values, accuracy, and F1-score.
 ---
-
-### Test 3: Model Evaluation Framework Test
-Verifies precision, recall, F1, accuracy, and confusion matrix calculation for both string labels (`ham`/`spam`) and numeric binary labels (`0`/`1`):
+### Test 3: Model Evaluation Script
+This script tests that the evaluation module works correctly:
 ```bash
 python evaluate.py
 ```
-**Expected Output:** Formatted evaluation tables and confusion matrix diagnostics with 100% test completion message.
-
+Expected Output:
+It will print out precision, recall, F1-score, accuracy, and the confusion matrix.
 ---
-
-### Test 4: End-to-End Application & Live Prediction Test
-Runs dataset loading, TF-IDF vectorization, model training, evaluation, and live inference on sample suspicious vs legitimate messages:
+### Test 4: Application Script
+The following command runs the application:
 ```bash
 python app.py
 ```
-
-**Sample Terminal Output:**
-```text
+Sample Output:
+The script will first attempt to load the dataset, which has not been found. It will then proceed to generate the fallback dataset. Next, the script will clean the data and split it into training and test sets. Finally, the script will train the model and evaluate it.
+```
 Loading data...
 Dataset not found. Generating fallback dummy dataset...
 Cleaning text and splitting data...
 Vectorizing text (TF-IDF)...
 Training Multinomial Naive Bayes model...
 Evaluating model...
-
 --- MODEL METRICS ---
-Accuracy:  100.00%
+Accuracy: 100.00%
 Precision: 100.00%
-Recall:    100.00%
-F1-Score:  100.00%
-
+Recall:  100.00%
+F1-Score: 100.00%
 Confusion Matrix (Format: TN, FP | FN, TP):
 [[3, 0], [0, 2]]
-
 --- LIVE PREDICTION TEST ---
-
 Input: "Hey, are we still studying applied numerical methods tonight?"
 Classification: [SAFE - HAM]
 Confidence Score: 78.45%
-
 Input: "URGENT: Your university account password has expired. Click here to verify."
+
 Classification: [MALICIOUS - SPAM]
 Confidence Score: 89.12%
 ```
-
 ---
-
 ## 🔍 Module-by-Module Breakdown
-
 ### [`data_preprocessing.py`](file:///c:/Users/HARSHVARDHAN/Desktop/AIML-VITYARTHI%20PROJECT/data_preprocessing.py)
-- **`TextPreprocessor`**: Configurable NLP pipeline for tokenization, lowercasing, HTML/URL removal, stopword filtering, and stemming.
-- **`TabularPreprocessor`**: Dataframe preprocessor that handles missing value imputation, Label Encoding, and standard/min-max scaling.
-
+- `TextPreprocessor`: Main text preprocessing class
+- `TabularPreprocessor`: Main tabular data preprocessing class
 ### [`model_training.py`](file:///c:/Users/HARSHVARDHAN/Desktop/AIML-VITYARTHI%20PROJECT/model_training.py)
-- **`PhishingClassifier`**: Wraps Scikit-Learn's `MultinomialNB`, providing `train()`, `predict()`, `predict_proba()`, and model serialization (`save_model` / `load_model`).
-
+- `PhishingClassifier`: Main classification model
 ### [`evaluate.py`](file:///c:/Users/HARSHVARDHAN/Desktop/AIML-VITYARTHI%20PROJECT/evaluate.py)
-- **`ModelEvaluator`**: Utility class computing Accuracy, Precision, Recall, F1-Score, and Confusion Matrix with formatted output.
-
+- `ModelEvaluator`: Main metrics evaluation class
 ### [`app.py`](file:///c:/Users/HARSHVARDHAN/Desktop/AIML-VITYARTHI%20PROJECT/app.py)
-- **`main()`**: Integrates all components into an end-to-end execution workflow with dataset loading, model training, metric evaluation, and sample live prediction.
-
+- `main()`: Main function, which puts all components together
 ---
-
 ## 📊 Evaluation Metrics & Performance
-
-The classifier is assessed using the following core statistical metrics:
-
+The performance of the classification model can be characterized by the following metrics:
 $$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}$$
-
 $$\text{Precision} = \frac{TP}{TP + FP}$$
-
 $$\text{Recall} = \frac{TP}{TP + FN}$$
-
 $$\text{F1-Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$$
-
-- **True Positive (TP)**: Malicious spam/phishing correctly classified as spam.
-- **True Negative (TN)**: Legitimate communication correctly classified as ham.
-- **False Positive (FP)**: Legitimate message mistakenly flagged as spam.
-- **False Negative (FN)**: Malicious message mistakenly classified as legitimate.
-
----
-
-## 📜 License
-This project is open source and available under the [MIT License](LICENSE).
+Where,
+- TP – True Positives: Spam messages classified as spam
+- TN – True Negatives: Ham messages classified as ham
+- FP – False Positives: Ham messages classified as spam
+- FN – False Negatives: Spam messages classified as ham
