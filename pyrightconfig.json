@@ -1,0 +1,9 @@
+{
+  "include": ["."],
+  "extraPaths": [
+    "C:\\Users\\HARSHVARDHAN\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages",
+    "C:\\Users\\HARSHVARDHAN\\AppData\\Roaming\\Python\\Python313\\site-packages"
+  ],
+  "reportMissingImports": "none",
+  "reportMissingModuleSource": "none"
+}
